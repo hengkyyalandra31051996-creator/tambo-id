@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 
 export async function POST(req: NextRequest) {
- const supabase = await createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'CV terlalu pendek atau tidak valid' }, { status: 400 })
   }
 
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' })
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
 
   const prompt = `Kamu adalah AI career coach profesional untuk pasar kerja Indonesia.
 Analisa CV berikut untuk posisi: ${targetRole || 'umum (tidak spesifik)'}
