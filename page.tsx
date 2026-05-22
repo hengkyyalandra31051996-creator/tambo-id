@@ -4,7 +4,7 @@ import Link from 'next/link'
 import LogoutButton from '@/components/LogoutButton'
 
 export default async function DashboardPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
   if (!user) redirect('/login')
