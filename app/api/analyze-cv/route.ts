@@ -41,14 +41,29 @@ Berikan analisa dalam format JSON berikut (HANYA JSON, tidak ada teks lain):
   "verdict": "<satu kalimat penutup motivasi>"
 }`
 
-  try {
-    const result = await model.generateContent(prompt)
-    const text = result.response.text()
-    const clean = text.replace(/```json|```/g, '').trim()
-    const analysis = JSON.parse(clean)
-    return NextResponse.json({ analysis })
-  } catch (err) {
-    console.error(err)
-    return NextResponse.json({ error: 'Gagal menganalisa CV. Coba lagi.' }, { status: 500 })
+  const maxRetries = 3
+  let lastError: any
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const result = await model.generateContent(prompt)
+      const text = result.response.text()
+      const clean = text.replace(/```json|```/g, '').trim()
+      const analysis = JSON.parse(clean)
+      return NextResponse.json({ analysis })
+    } catch (err: any) {
+      lastError = err
+      const is503 = err?.status === 503
+      const isLastAttempt = attempt === maxRetries
+
+      if (is503 && !isLastAttempt) {
+        await new Promise(r => setTimeout(r, attempt * 2000))
+        continue
+      }
+      break
+    }
   }
+
+  console.error(lastError)
+  return NextResponse.json({ error: 'Gagal menganalisa CV. Coba lagi.' }, { status: 500 })
 }
