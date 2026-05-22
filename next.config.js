@@ -1,3 +1,8 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
-module.exports = nextConfig;
+const nextConfig = {
+  experimental: {
+    serverComponentsExternalPackages: ['unpdf'],
+  },
+}
+
+module.exports = nextConfig
