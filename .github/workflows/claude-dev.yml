@@ -1,9 +1,7 @@
 # ============================================================
-# Tambo Dev Agent — Claude Code GitHub Actions
+# Tambo Dev Agent — Claude Code GitHub Actions v2
 # Trigger : GitHub Issue diberi label "ready-for-dev"
 # Action  : Claude Code membaca issue, implementasi, buat PR
-# Requires: Claude GitHub App terpasang di repo
-#           ANTHROPIC_API_KEY tersedia di GitHub Secrets
 # ============================================================
 
 name: Tambo Dev Agent
@@ -35,30 +33,68 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          claude_args: "--max-turns 30"
+          show_full_output: true
+          claude_args: >-
+            --max-turns 30
+            --allowedTools "Read,Write,Edit,Glob,Grep,Bash(grep *),Bash(rg *),Bash(find *),Bash(cat *),Bash(ls *),Bash(git *),Bash(gh pr *),Bash(gh issue comment *)"
+          settings: |
+            {
+              "permissions": {
+                "allow": [
+                  "Read",
+                  "Write",
+                  "Edit",
+                  "Glob",
+                  "Grep",
+                  "Bash(grep *)",
+                  "Bash(rg *)",
+                  "Bash(find *)",
+                  "Bash(cat *)",
+                  "Bash(ls *)",
+                  "Bash(git *)",
+                  "Bash(gh pr *)",
+                  "Bash(gh issue comment *)"
+                ]
+              }
+            }
           prompt: |
             Kamu adalah Senior Developer untuk Tambo.id.
 
-            Langkah pertama yang wajib dilakukan:
-            Baca file CLAUDE.md di root repo ini. File tersebut berisi
-            instruksi penting tentang project, design system, dan file
-            yang tidak boleh diubah.
+            LANGKAH PERTAMA WAJIB:
+            Baca file CLAUDE.md di root repo ini.
 
             Setelah membaca CLAUDE.md, baca isi issue ini secara lengkap:
-            - Title dan body issue
-            - Semua subtask
-            - Semua acceptance criteria
-            - Implementation notes
+            - title
+            - body
+            - semua subtask
+            - acceptance criteria
+            - guardrails
+            - implementation notes
 
-            Implementasikan semua subtask yang ada di issue.
+            Lakukan implementasi sesuai issue.
 
-            Setelah implementasi selesai, tulis PR comment yang berisi:
-            1. Daftar file yang diubah beserta deskripsi singkat perubahan
-            2. Checklist acceptance criteria (centang semua yang sudah selesai)
-            3. Langkah-langkah cara test
-            4. Known issues atau catatan jika ada
+            ATURAN WAJIB — JANGAN SILENT FAIL:
 
-            Buat Pull Request dengan:
-            - Title  : [TASK-ID] judul singkat dari issue
-            - Branch : task/[task-id-dalam-lowercase]
-            - Target : main branch
+            1. Jika string target tidak ditemukan di codebase:
+               - Jangan membuat perubahan apapun.
+               - Wajib comment di issue ini:
+                 "String target tidak ditemukan. Tidak ada perubahan dibuat."
+               - Gunakan gh issue comment.
+
+            2. Jika tidak ada perubahan yang dibuat:
+               - Wajib comment di issue ini dan jelaskan alasannya.
+
+            3. Jika implementasi berhasil:
+               - Buat branch baru: task/[task-id-lowercase]
+               - Commit perubahan ke branch tersebut
+               - Push branch
+               - Buat Pull Request ke main dengan gh pr create
+
+            4. PR body wajib berisi:
+               - File yang diubah + deskripsi perubahan
+               - Checklist acceptance criteria
+               - Cara test
+               - Known issues jika ada
+
+            5. Jika gagal membuat PR:
+               - Wajib comment di issue ini dengan detail error.
