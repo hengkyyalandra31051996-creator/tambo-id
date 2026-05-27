@@ -14,15 +14,16 @@ on:
 
 jobs:
   claude-dev:
-    # Hanya jalan jika label yang ditambahkan adalah ready-for-dev
     if: github.event.label.name == 'ready-for-dev'
 
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     permissions:
       contents: write
       pull-requests: write
       issues: write
+      id-token: write
 
     steps:
       - name: Checkout repository
@@ -61,5 +62,3 @@ jobs:
             - Title  : [TASK-ID] judul singkat dari issue
             - Branch : task/[task-id-dalam-lowercase]
             - Target : main branch
-
-          timeout-minutes: 30
