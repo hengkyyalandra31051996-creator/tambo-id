@@ -1,0 +1,65 @@
+# ============================================================
+# Tambo Dev Agent — Claude Code GitHub Actions
+# Trigger : GitHub Issue diberi label "ready-for-dev"
+# Action  : Claude Code membaca issue, implementasi, buat PR
+# Requires: Claude GitHub App terpasang di repo
+#           ANTHROPIC_API_KEY tersedia di GitHub Secrets
+# ============================================================
+
+name: Tambo Dev Agent
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  claude-dev:
+    # Hanya jalan jika label yang ditambahkan adalah ready-for-dev
+    if: github.event.label.name == 'ready-for-dev'
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Claude Code Dev Agent
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_args: "--max-turns 30"
+          prompt: |
+            Kamu adalah Senior Developer untuk Tambo.id.
+
+            Langkah pertama yang wajib dilakukan:
+            Baca file CLAUDE.md di root repo ini. File tersebut berisi
+            instruksi penting tentang project, design system, dan file
+            yang tidak boleh diubah.
+
+            Setelah membaca CLAUDE.md, baca isi issue ini secara lengkap:
+            - Title dan body issue
+            - Semua subtask
+            - Semua acceptance criteria
+            - Implementation notes
+
+            Implementasikan semua subtask yang ada di issue.
+
+            Setelah implementasi selesai, tulis PR comment yang berisi:
+            1. Daftar file yang diubah beserta deskripsi singkat perubahan
+            2. Checklist acceptance criteria (centang semua yang sudah selesai)
+            3. Langkah-langkah cara test
+            4. Known issues atau catatan jika ada
+
+            Buat Pull Request dengan:
+            - Title  : [TASK-ID] judul singkat dari issue
+            - Branch : task/[task-id-dalam-lowercase]
+            - Target : main branch
+
+          timeout-minutes: 30
