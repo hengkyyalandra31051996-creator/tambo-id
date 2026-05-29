@@ -1,9 +1,3 @@
-# ============================================================
-# Tambo Dev Agent — Claude Code GitHub Actions v2
-# Trigger : GitHub Issue diberi label "ready-for-dev"
-# Action  : Claude Code membaca issue, implementasi, buat PR
-# ============================================================
-
 name: Tambo Dev Agent
 
 on:
@@ -15,7 +9,7 @@ jobs:
     if: github.event.label.name == 'ready-for-dev'
 
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
 
     permissions:
       contents: write
@@ -34,67 +28,62 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           show_full_output: true
+          branch_prefix: "task/"
           claude_args: >-
-            --max-turns 30
-            --allowedTools "Read,Write,Edit,Glob,Grep,Bash(grep *),Bash(rg *),Bash(find *),Bash(cat *),Bash(ls *),Bash(git *),Bash(gh pr *),Bash(gh issue comment *)"
-          settings: |
-            {
-              "permissions": {
-                "allow": [
-                  "Read",
-                  "Write",
-                  "Edit",
-                  "Glob",
-                  "Grep",
-                  "Bash(grep *)",
-                  "Bash(rg *)",
-                  "Bash(find *)",
-                  "Bash(cat *)",
-                  "Bash(ls *)",
-                  "Bash(git *)",
-                  "Bash(gh pr *)",
-                  "Bash(gh issue comment *)"
-                ]
-              }
-            }
+            --max-turns 20
+            --allowedTools "Read,Write,Edit,MultiEdit,Glob,Grep,Bash(grep *),Bash(rg *),Bash(find *),Bash(cat *),Bash(ls *),Bash(git *),Bash(gh pr *),Bash(gh issue comment *)"
           prompt: |
             Kamu adalah Senior Developer untuk Tambo.id.
 
+            ISSUE YANG HARUS DIKERJAKAN:
+            Nomor:
+            #${{ github.event.issue.number }}
+
+            Judul:
+            ${{ github.event.issue.title }}
+
+            Konten:
+            ${{ github.event.issue.body }}
+
+            ---
+
+            ATURAN UTAMA:
+            - Jangan mencari issue lain.
+            - Jangan menjalankan gh issue list.
+            - Jangan bertanya ke user.
+            - Jangan menjalankan AskUserQuestion.
+            - Jangan membaca env/printenv untuk mencari issue context.
+            - Kerjakan hanya issue yang sudah ditulis di prompt ini.
+
             LANGKAH PERTAMA WAJIB:
-            Baca file CLAUDE.md di root repo ini.
+            Baca file CLAUDE.md di root repo sebelum mengerjakan apapun.
 
-            Setelah membaca CLAUDE.md, baca isi issue ini secara lengkap:
-            - title
-            - body
-            - semua subtask
-            - acceptance criteria
-            - guardrails
-            - implementation notes
+            ---
 
-            Lakukan implementasi sesuai issue.
+            TASK W3:
+            Cari existing text:
+            - "© 2025 Tambo.id"
+            - atau "2025 Tambo.id"
 
-            ATURAN WAJIB — JANGAN SILENT FAIL:
+            Jika ditemukan:
+            - Ganti 2025 menjadi 2026.
+            - Jangan ubah text lain.
+            - Jangan buat footer baru.
+            - Jangan ubah logic.
+            - Jangan ubah auth, Supabase, Gemini, env, routing besar, atau landing hero.
 
-            1. Jika string target tidak ditemukan di codebase:
-               - Jangan membuat perubahan apapun.
-               - Wajib comment di issue ini:
-                 "String target tidak ditemukan. Tidak ada perubahan dibuat."
-               - Gunakan gh issue comment.
+            Jika string target tidak ditemukan:
+            - Jangan ubah file apapun.
+            - Comment ke issue #${{ github.event.issue.number }}:
+              "String target tidak ditemukan. Tidak ada perubahan dibuat."
+            - Selesai.
 
-            2. Jika tidak ada perubahan yang dibuat:
-               - Wajib comment di issue ini dan jelaskan alasannya.
+            Jika implementasi berhasil:
+            1. Buat branch baru dengan prefix task/.
+            2. Commit perubahan.
+            3. Push branch.
+            4. Buat Pull Request ke main dengan gh pr create.
+            5. Comment ke issue #${{ github.event.issue.number }} bahwa PR sudah dibuat.
 
-            3. Jika implementasi berhasil:
-               - Buat branch baru: task/[task-id-lowercase]
-               - Commit perubahan ke branch tersebut
-               - Push branch
-               - Buat Pull Request ke main dengan gh pr create
-
-            4. PR body wajib berisi:
-               - File yang diubah + deskripsi perubahan
-               - Checklist acceptance criteria
-               - Cara test
-               - Known issues jika ada
-
-            5. Jika gagal membuat PR:
-               - Wajib comment di issue ini dengan detail error.
+            Jika gagal membuat PR:
+            - Comment ke issue #${{ github.event.issue.number }} dengan detail error.
