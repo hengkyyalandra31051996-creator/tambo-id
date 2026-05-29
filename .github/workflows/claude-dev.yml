@@ -1,0 +1,93 @@
+# ============================================================
+# Tambo Dev Agent — Claude Code GitHub Actions v4 (Generic)
+# Trigger : GitHub Issue diberi label "ready-for-dev"
+# Action  : Claude Code membaca issue, implementasi, buat PR
+# ============================================================
+
+name: Tambo Dev Agent
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  claude-dev:
+    if: github.event.label.name == 'ready-for-dev'
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Claude Code Dev Agent
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          show_full_output: true
+          branch_prefix: "task/"
+          claude_args: >-
+            --max-turns 20
+            --allowedTools "Read,Write,Edit,MultiEdit,Glob,Grep,Bash(grep *),Bash(find *),Bash(cat *),Bash(ls *),Bash(git *),Bash(gh pr *),Bash(gh issue comment *)"
+          prompt: |
+            Kamu adalah Senior Developer untuk Tambo.id.
+
+            ISSUE YANG HARUS DIKERJAKAN:
+            Nomor:
+            #${{ github.event.issue.number }}
+
+            Judul:
+            ${{ github.event.issue.title }}
+
+            Konten:
+            ${{ github.event.issue.body }}
+
+            ---
+
+            LANGKAH PERTAMA WAJIB:
+            Baca file CLAUDE.md di root repo ini sebelum mengerjakan apapun.
+
+            ---
+
+            INSTRUKSI:
+            Kerjakan hanya task yang tertulis di issue di atas.
+            Ikuti semua subtask, guardrails, implementation notes, dan acceptance criteria.
+            Jangan mengerjakan hal di luar scope issue.
+            Jangan mencari issue lain.
+            Jangan menjalankan gh issue list.
+            Jangan bertanya ke user.
+            Jangan menjalankan AskUserQuestion.
+
+            ---
+
+            ATURAN OUTPUT — JANGAN SILENT:
+
+            Jika tidak bisa melanjutkan:
+            - Jangan membuat perubahan asal-asalan.
+            - Comment ke issue #${{ github.event.issue.number }} dengan alasan spesifik.
+            - Selesai.
+
+            Jika implementasi berhasil:
+            1. Buat branch baru dengan prefix task/.
+            2. Commit perubahan.
+            3. Push branch.
+            4. Buat Pull Request ke main dengan gh pr create.
+            5. Isi PR body dengan:
+               - file yang diubah
+               - ringkasan perubahan
+               - checklist acceptance criteria
+               - cara test
+               - known issues jika ada
+            6. Comment ke issue #${{ github.event.issue.number }} bahwa PR sudah dibuat.
+
+            Jika ada error selama proses:
+            - Comment ke issue #${{ github.event.issue.number }} dengan detail error spesifik.

@@ -227,7 +227,7 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <p className="text-[#FAFAF8]/20 text-xs">© 2025 Tambo.id</p>
+        <p className="text-[#FAF6EC]/25 text-xs">© 2026 Tambo.id</p>
       </div>
     </div>
   )
