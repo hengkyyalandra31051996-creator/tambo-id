@@ -39,15 +39,15 @@ export default function ForgotPasswordPage() {
 
   if (sent) {
     return (
-      <div className="min-h-screen bg-[#F7F3EC] flex flex-col items-center justify-center px-4 py-12">
+      <div className="min-h-screen bg-[#F4EFE3] flex flex-col items-center justify-center px-4 py-12">
         <div className="w-full max-w-md text-center">
           <div className="text-5xl mb-4">📩</div>
-          <h2 className="text-xl font-bold text-[#124136] mb-2">Link terkirim!</h2>
+          <h2 className="text-xl font-bold text-[#1B4332] mb-2">Link terkirim!</h2>
           <p className="text-[#5E6B53] text-sm leading-relaxed">
-            Kalau email <strong className="text-[#124136]">{email}</strong> terdaftar, kamu akan terima
+            Kalau email <strong className="text-[#1B4332]">{email}</strong> terdaftar, kamu akan terima
             link untuk reset password. Cek juga folder spam ya.
           </p>
-          <Link href="/login" className="mt-6 inline-block text-sm text-[#124136] font-semibold hover:underline">
+          <Link href="/login" className="mt-6 inline-block text-sm text-[#1B4332] font-semibold hover:underline">
             Kembali ke halaman masuk
           </Link>
         </div>
@@ -56,7 +56,7 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7F3EC] flex flex-col items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-[#F4EFE3] flex flex-col items-center justify-center px-4 py-12">
       <div className="w-full max-w-md animate-fade-up">
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex justify-center">
@@ -70,7 +70,7 @@ export default function ForgotPasswordPage() {
             <div className="text-3xl mb-3">🔑</div>
             <h2 className="text-lg font-semibold text-[#1A1A1A]">Lupa password?</h2>
             <p className="text-sm text-[#5E6B53] mt-1">
-              Masukkan email kamu dan kami kirimkan link reset.
+              Masukkan email yang kamu pakai waktu daftar. Kami kirim link reset dalam 1–2 menit.
             </p>
           </div>
 
@@ -94,7 +94,7 @@ export default function ForgotPasswordPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 rounded-xl bg-[#124136] hover:bg-[#0e3229] active:bg-[#0a2920] text-[#FAF6EC] font-semibold text-sm transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
+              className="w-full py-3 rounded-xl bg-[#1B4332] hover:bg-[#0e3229] active:bg-[#0a2920] text-[#FAF6EC] font-semibold text-sm transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed shadow-sm"
             >
               {loading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -102,7 +102,7 @@ export default function ForgotPasswordPage() {
                   Mengirim...
                 </span>
               ) : (
-                'Kirim Link Reset'
+                'Kirim Link Reset →'
               )}
             </button>
           </form>
@@ -110,7 +110,7 @@ export default function ForgotPasswordPage() {
 
         <p className="text-center text-sm text-[#5E6B53] mt-6">
           Ingat passwordnya?{' '}
-          <Link href="/login" className="text-[#124136] font-semibold hover:underline">
+          <Link href="/login" className="text-[#1B4332] font-semibold hover:underline">
             Masuk
           </Link>
         </p>

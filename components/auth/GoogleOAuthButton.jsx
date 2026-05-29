@@ -38,7 +38,7 @@ export default function GoogleOAuthButton({ label = 'Lanjutkan dengan Google' })
       "
     >
       {loading ? (
-        <span className="w-5 h-5 border-2 border-[#E8E2D6] border-t-[#124136] rounded-full animate-spin" />
+        <span className="w-5 h-5 border-2 border-[#E5E0D8] border-t-[#1B4332] rounded-full animate-spin" />
       ) : (
         <GoogleIcon />
       )}
