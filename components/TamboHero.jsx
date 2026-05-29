@@ -712,7 +712,7 @@ export default function TamboHero() {
             </svg>
             <span style={{ fontSize: 13, fontWeight: 600, color: C.sage }}>tambo</span>
           </div>
-          <p style={{ fontSize: 12, color: `${C.sage}70` }}>© 2025 Tambo.id — AI Career Coach untuk Fresh Grad Indonesia</p>
+          <p style={{ fontSize: 12, color: `${C.sage}70` }}>© 2026 Tambo.id — AI Career Coach untuk Fresh Grad Indonesia</p>
           <div style={{ display: 'flex', gap: 20 }}>
             {[['Cara kerja', '#cara-kerja'], ['Produk', '#fitur'], ['Masuk', '/login'], ['Daftar', '/register']].map(([label, href]) => (
               <a key={label} href={href} style={{ fontSize: 12, color: C.sage, textDecoration: 'none' }}>{label}</a>
