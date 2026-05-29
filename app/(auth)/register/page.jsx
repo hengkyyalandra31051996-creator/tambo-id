@@ -127,7 +127,7 @@ export default function RegisterPage() {
           </div>
         </div>
 
-        <p className="text-[#FAF6EC]/25 text-xs">© 2025 Tambo.id</p>
+        <p className="text-[#FAF6EC]/25 text-xs">© 2026 Tambo.id</p>
       </div>
 
       {/* ── Right panel (cream, form) ──────────────────── */}
