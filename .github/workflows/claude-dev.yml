@@ -1,3 +1,9 @@
+# ============================================================
+# Tambo Dev Agent — Claude Code GitHub Actions v4 (Generic)
+# Trigger : GitHub Issue diberi label "ready-for-dev"
+# Action  : Claude Code membaca issue, implementasi, buat PR
+# ============================================================
+
 name: Tambo Dev Agent
 
 on:
@@ -31,7 +37,7 @@ jobs:
           branch_prefix: "task/"
           claude_args: >-
             --max-turns 20
-            --allowedTools "Read,Write,Edit,MultiEdit,Glob,Grep,Bash(grep *),Bash(rg *),Bash(find *),Bash(cat *),Bash(ls *),Bash(git *),Bash(gh pr *),Bash(gh issue comment *)"
+            --allowedTools "Read,Write,Edit,MultiEdit,Glob,Grep,Bash(grep *),Bash(find *),Bash(cat *),Bash(ls *),Bash(git *),Bash(gh pr *),Bash(gh issue comment *)"
           prompt: |
             Kamu adalah Senior Developer untuk Tambo.id.
 
@@ -47,35 +53,27 @@ jobs:
 
             ---
 
-            ATURAN UTAMA:
-            - Jangan mencari issue lain.
-            - Jangan menjalankan gh issue list.
-            - Jangan bertanya ke user.
-            - Jangan menjalankan AskUserQuestion.
-            - Jangan membaca env/printenv untuk mencari issue context.
-            - Kerjakan hanya issue yang sudah ditulis di prompt ini.
-
             LANGKAH PERTAMA WAJIB:
-            Baca file CLAUDE.md di root repo sebelum mengerjakan apapun.
+            Baca file CLAUDE.md di root repo ini sebelum mengerjakan apapun.
 
             ---
 
-            TASK W3:
-            Cari existing text:
-            - "© 2025 Tambo.id"
-            - atau "2025 Tambo.id"
+            INSTRUKSI:
+            Kerjakan hanya task yang tertulis di issue di atas.
+            Ikuti semua subtask, guardrails, implementation notes, dan acceptance criteria.
+            Jangan mengerjakan hal di luar scope issue.
+            Jangan mencari issue lain.
+            Jangan menjalankan gh issue list.
+            Jangan bertanya ke user.
+            Jangan menjalankan AskUserQuestion.
 
-            Jika ditemukan:
-            - Ganti 2025 menjadi 2026.
-            - Jangan ubah text lain.
-            - Jangan buat footer baru.
-            - Jangan ubah logic.
-            - Jangan ubah auth, Supabase, Gemini, env, routing besar, atau landing hero.
+            ---
 
-            Jika string target tidak ditemukan:
-            - Jangan ubah file apapun.
-            - Comment ke issue #${{ github.event.issue.number }}:
-              "String target tidak ditemukan. Tidak ada perubahan dibuat."
+            ATURAN OUTPUT — JANGAN SILENT:
+
+            Jika tidak bisa melanjutkan:
+            - Jangan membuat perubahan asal-asalan.
+            - Comment ke issue #${{ github.event.issue.number }} dengan alasan spesifik.
             - Selesai.
 
             Jika implementasi berhasil:
@@ -83,7 +81,13 @@ jobs:
             2. Commit perubahan.
             3. Push branch.
             4. Buat Pull Request ke main dengan gh pr create.
-            5. Comment ke issue #${{ github.event.issue.number }} bahwa PR sudah dibuat.
+            5. Isi PR body dengan:
+               - file yang diubah
+               - ringkasan perubahan
+               - checklist acceptance criteria
+               - cara test
+               - known issues jika ada
+            6. Comment ke issue #${{ github.event.issue.number }} bahwa PR sudah dibuat.
 
-            Jika gagal membuat PR:
-            - Comment ke issue #${{ github.event.issue.number }} dengan detail error.
+            Jika ada error selama proses:
+            - Comment ke issue #${{ github.event.issue.number }} dengan detail error spesifik.
