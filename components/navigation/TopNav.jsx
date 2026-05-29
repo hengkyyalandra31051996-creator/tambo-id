@@ -51,7 +51,7 @@ export default function TopNav({ user, profile }) {
             onClick={() => setMenuOpen((o) => !o)}
             className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-xl hover:bg-[#E8E2D6]/60 transition-colors"
           >
-            <div className="w-7 h-7 rounded-full bg-[#124136] text-[#FAF6EC] flex items-center justify-center text-xs font-bold">
+            <div className="w-7 h-7 rounded-full bg-[#1B4332] text-[#FAF6EC] flex items-center justify-center text-xs font-bold">
               {initials || '?'}
             </div>
             <span className="text-sm font-medium text-gray-700 max-w-[120px] truncate">
@@ -112,7 +112,7 @@ function NavLink({ href, active, disabled, children }) {
       href={href}
       className={`
         text-sm font-medium transition-colors
-        ${active ? 'text-[#124136] font-semibold' : 'text-[#5E6B53] hover:text-[#1A1A1A]'}
+        ${active ? 'text-[#1B4332] font-semibold' : 'text-[#5E6B53] hover:text-[#1A1A1A]'}
       `}
     >
       {children}

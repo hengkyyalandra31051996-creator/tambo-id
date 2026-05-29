@@ -1,6 +1,6 @@
 export default function TamboLogo({ variant = 'light', size = 'md' }) {
-  const textColor  = variant === 'dark' ? '#FAF6EC' : '#124136'
-  const accentColor = variant === 'dark' ? '#C89B4C' : '#124136'
+  const textColor  = variant === 'dark' ? '#FAF6EC' : '#1B4332'
+  const accentColor = variant === 'dark' ? '#B89858' : '#1B4332'
 
   const sizeMap = {
     sm: { w: 16, cls: 'text-lg' },

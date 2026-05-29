@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 import { createClient } from '@/lib/supabase/server'
+import { saveCVAnalysis } from '@/lib/cv-analysis'
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
 
@@ -9,7 +10,7 @@ export async function POST(req: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
-  const { cvText, targetRole } = await req.json()
+  const { cvText, targetRole, filename } = await req.json()
 
   if (!cvText || cvText.length < 50) {
     return NextResponse.json({ error: 'CV terlalu pendek atau tidak valid' }, { status: 400 })
@@ -50,7 +51,15 @@ Berikan analisa dalam format JSON berikut (HANYA JSON, tidak ada teks lain):
       const text = result.response.text()
       const clean = text.replace(/```json|```/g, '').trim()
       const analysis = JSON.parse(clean)
-      return NextResponse.json({ analysis })
+
+      const { data: saved } = await saveCVAnalysis(supabase, {
+        userId: user.id,
+        analysis,
+        filename: filename ?? null,
+        rawText: cvText,
+      })
+
+      return NextResponse.json({ analysis, id: saved?.id ?? null })
     } catch (err: any) {
       lastError = err
       const is503 = err?.status === 503

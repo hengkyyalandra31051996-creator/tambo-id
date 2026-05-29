@@ -34,7 +34,7 @@ export default function FormField({
           focus:outline-none focus:ring-2 transition-all duration-150
           ${error
             ? 'border-red-400 bg-red-50 focus:ring-red-200'
-            : 'border-[#E8E2D6] bg-white focus:ring-[#124136]/20 focus:border-[#124136]'
+            : 'border-[#E5E0D8] bg-white focus:ring-[#1B4332]/20 focus:border-[#1B4332]'
           }
         `}
       />

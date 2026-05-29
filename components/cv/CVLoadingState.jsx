@@ -26,8 +26,8 @@ export default function CVLoadingState() {
     <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
       {/* Animated leaf spinner */}
       <div className="relative w-16 h-16 mb-6">
-        <div className="absolute inset-0 rounded-full border-4 border-[#124136]/20" />
-        <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-[#124136] animate-spin" />
+        <div className="absolute inset-0 rounded-full border-4 border-[#1B4332]/20" />
+        <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-[#1B4332] animate-spin" />
         <div className="absolute inset-0 flex items-center justify-center text-2xl">
           📄
         </div>
@@ -49,7 +49,7 @@ export default function CVLoadingState() {
             key={i}
             className={`
               w-2 h-2 rounded-full transition-all duration-500
-              ${i <= stepIndex ? 'bg-[#124136]' : 'bg-gray-200'}
+              ${i <= stepIndex ? 'bg-[#1B4332]' : 'bg-gray-200'}
               ${i === stepIndex ? 'scale-125' : ''}
             `}
           />

@@ -2,17 +2,17 @@
 
 @theme {
   /* ── Color tokens ─────────────────────────────────── */
-  --color-primary:       #124136;
-  --color-primary-hover: #0e3229;
+  --color-primary:       #1B4332;
+  --color-primary-hover: #163829;
   --color-sage:          #5E6B53;
-  --color-gold:          #C89B4C;
-  --color-bg:            #F7F3EC;
-  --color-paper:         #FAF6EC;
+  --color-gold:          #B89858;
+  --color-bg:            #F4EFE3;
+  --color-paper:         #FAFAF8;
   --color-ink:           #1A1A1A;
-  --color-success:       #4F7860;
+  --color-success:       #2D6A4F;
   --color-warning:       #9B6A1F;
   --color-danger:        #8B3E2A;
-  --color-border:        #E8E2D6;
+  --color-border:        #E5E0D8;
 
   /* ── Typography ───────────────────────────────────── */
   --font-sans:    var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
